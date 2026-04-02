@@ -1,167 +1,197 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html>
 <head>
-  <title>The Farm Investment</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body {
-      margin:0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg,#0f172a,#1e293b);
-      color:white;
-    }
-    .container {
-      padding:20px;
-      max-width:500px;
-      margin:auto;
-    }
-    .card {
-      background:#1e293b;
-      padding:20px;
-      margin:15px 0;
-      border-radius:15px;
-      box-shadow:0 4px 20px rgba(0,0,0,0.3);
-    }
-    h1,h2,h3 {margin:10px 0;}
-    button {
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:10px;
-      background:#22c55e;
-      color:white;
-      font-weight:bold;
-      cursor:pointer;
-      margin-top:10px;
-    }
-    button.secondary {
-      background:#3b82f6;
-    }
-    input {
-      width:100%;
-      padding:10px;
-      border-radius:8px;
-      border:none;
-      margin-top:10px;
-    }
-    .hidden {display:none;}
-    .header {
-      text-align:center;
-      padding:30px 20px;
-    }
-    .logo {
-      font-size:28px;
-      font-weight:bold;
-      color:#22c55e;
-    }
-    .plan {
-      border:1px solid #334155;
-      border-radius:12px;
-      padding:15px;
-      margin:10px 0;
-    }
-  </style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Farm Investment</title>
+
+<style>
+body{
+  margin:0;
+  font-family: Arial;
+  background:#0f172a;
+  color:white;
+}
+.container{padding:20px; max-width:500px; margin:auto;}
+.card{
+  background:#1e293b;
+  padding:20px;
+  border-radius:15px;
+  margin:15px 0;
+}
+button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:10px;
+  background:#22c55e;
+  color:white;
+  font-weight:bold;
+}
+.secondary{background:#3b82f6;}
+.hidden{display:none;}
+.plan{
+  border:1px solid #334155;
+  padding:15px;
+  border-radius:10px;
+  margin:10px 0;
+}
+input{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  margin-top:10px;
+}
+.header{text-align:center; padding:40px 10px;}
+.logo{font-size:26px; color:#22c55e;}
+.small{font-size:12px; color:#94a3b8;}
+</style>
 </head>
-<body><div class="container">  <div class="header" id="home">
-    <div class="logo">🌱 The Farm Investment</div>
-    <p>Grow your money like a farm 🌾</p>
-    <button onclick="showPlans()">Get Started</button>
-  </div>  <div id="plans" class="hidden">
-    <h2>Select Investment Plan</h2><div class="plan">
-  <h3>🐔 Hen Plan</h3>
-  <p>Invest: GH₵30</p>
-  <p>Return: GH₵100</p>
-  <p>Duration: 10 Days</p>
-  <button onclick="selectPlan(30,100)">Select Plan</button>
+
+<body>
+<div class="container">
+
+<!-- HOME -->
+<div id="home">
+  <div class="header">
+    <div class="logo">🌱 Farm Investment</div>
+    <p>Grow your money daily</p>
+    <button onclick="show('plans')">Get Started</button>
+  </div>
 </div>
 
-<div class="plan">
-  <h3>🐄 Cow Plan</h3>
-  <p>Invest: GH₵50</p>
-  <p>Return: GH₵150</p>
-  <p>Duration: 10 Days</p>
-  <button onclick="selectPlan(50,150)">Select Plan</button>
+<!-- PLANS -->
+<div id="plans" class="hidden">
+  <h2>Select Plan</h2>
+
+  <div class="plan">
+    <h3>🐔 Hen</h3>
+    <p>30 → 100</p>
+    <p class="small">10 days</p>
+    <button onclick="choose(30,100)">Invest</button>
+  </div>
+
+  <div class="plan">
+    <h3>🐄 Cow</h3>
+    <p>50 → 150</p>
+    <p class="small">10 days</p>
+    <button onclick="choose(50,150)">Invest</button>
+  </div>
+
+  <div class="plan">
+    <h3>🐇 Rabbit</h3>
+    <p>100 → 250</p>
+    <p class="small">10 days</p>
+    <button onclick="choose(100,250)">Invest</button>
+  </div>
+
+  <button class="secondary" onclick="show('home')">⬅ Back</button>
 </div>
 
-<div class="plan">
-  <h3>🐇 Rabbit Plan</h3>
-  <p>Invest: GH₵100</p>
-  <p>Return: GH₵250</p>
-  <p>Duration: 10 Days</p>
-  <button onclick="selectPlan(100,250)">Select Plan</button>
+<!-- PAYMENT -->
+<div id="payment" class="hidden card">
+  <button class="secondary" onclick="show('plans')">⬅ Back</button>
+  <h3>Send Payment</h3>
+  <p><b>0246278096</b></p>
+  <p>MARY ENNINFUL</p>
+  <p>MTN</p>
+  <button onclick="paid()">I Have Paid</button>
 </div>
 
-<button onclick="goHome()" class="secondary">⬅ Back</button>
+<!-- STATUS -->
+<div id="status" class="hidden card">
+  <h3 id="statusText">Pending...</h3>
+</div>
 
-  </div>  <div id="payment" class="hidden card">
-    <h2>Make Payment</h2>
-    <p>Send money to:</p>
-    <p><b>0246278096</b></p>
-    <p>Name: <b>MARY ENNINFUL</b></p>
-    <p>Network: MTN</p>
-    <button onclick="confirmPayment()">I Have Paid</button>
-  </div>  <div id="status" class="hidden card">
-    <h2 id="statusText"></h2>
-  </div>  <div id="dashboard" class="hidden">
-    <h2>📊 Dashboard</h2>
-    <div class="card">
-      <p id="balance"></p>
-      <button onclick="withdraw()">Withdraw</button>
-    </div>
-  </div>  <div id="admin" class="card">
-    <h3>Admin</h3>
-    <input id="adminPass" placeholder="Enter password" />
-    <button onclick="loginAdmin()">Login</button><div id="adminPanel" class="hidden">
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+  <h2>Dashboard</h2>
+
+  <div class="card">
+    <p id="balance">Balance: 0</p>
+    <button onclick="show('withdraw')">Withdraw</button>
+  </div>
+
+  <button class="secondary" onclick="show('plans')">⬅ Back</button>
+</div>
+
+<!-- WITHDRAW -->
+<div id="withdraw" class="hidden card">
+  <button class="secondary" onclick="show('dashboard')">⬅ Back</button>
+  <h3>Withdraw</h3>
+  <input id="amount" placeholder="Enter amount">
+  <button onclick="withdraw()">Submit</button>
+</div>
+
+<!-- ADMIN (hidden entry) -->
+<div id="adminLogin" class="hidden card">
+  <h3>Admin Login</h3>
+  <input id="pass" placeholder="Password">
+  <button onclick="adminLogin()">Login</button>
+</div>
+
+<div id="adminPanel" class="hidden card">
   <h3>Admin Panel</h3>
   <button onclick="approve()">Approve Payment</button>
 </div>
 
-  </div></div><script>
-let selectedAmount = 0;
-let returnAmount = 0;
+</div>
 
-function showPlans(){
-  document.getElementById('home').classList.add('hidden');
-  document.getElementById('plans').classList.remove('hidden');
+<script>
+let invest=0, profit=0;
+
+// screen switch
+function show(id){
+  document.querySelectorAll('.container > div').forEach(x=>x.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
 }
 
-function goHome(){
-  document.getElementById('plans').classList.add('hidden');
-  document.getElementById('home').classList.remove('hidden');
+// select plan
+function choose(a,b){
+  invest=a; profit=b;
+  show('payment');
 }
 
-function selectPlan(amount, ret){
-  selectedAmount = amount;
-  returnAmount = ret;
-  document.getElementById('plans').classList.add('hidden');
-  document.getElementById('payment').classList.remove('hidden');
+// confirm payment
+function paid(){
+  show('status');
+  document.getElementById('statusText').innerText='⏳ Pending 24hrs';
 }
 
-function confirmPayment(){
-  document.getElementById('payment').classList.add('hidden');
-  document.getElementById('status').classList.remove('hidden');
-  document.getElementById('statusText').innerText = '⏳ Payment Pending (24hrs)';
-}
-
+// admin approve
 function approve(){
-  document.getElementById('statusText').innerText = '✅ Payment Approved';
-  document.getElementById('dashboard').classList.remove('hidden');
-  document.getElementById('balance').innerText = 'Expected Return: GH₵ ' + returnAmount;
+  show('dashboard');
+  document.getElementById('balance').innerText='Balance: '+profit;
 }
 
+// withdraw
 function withdraw(){
-  let amount = prompt('Enter withdrawal amount');
-  if(amount){
+  let amt=document.getElementById('amount').value;
+  if(amt){
     alert('Withdrawal Pending ⏳');
+    show('dashboard');
   }
 }
 
-function loginAdmin(){
-  let pass = document.getElementById('adminPass').value;
-  if(pass === 'admin123'){
-    document.getElementById('adminPanel').classList.remove('hidden');
-  } else {
-    alert('Wrong password');
-  }
+// admin login
+function adminLogin(){
+  let p=document.getElementById('pass').value;
+  if(p==='admin123'){
+    show('adminPanel');
+  }else alert('Wrong password');
 }
-</script></body>
+
+// hidden admin trigger (tap logo 5 times)
+let taps=0;
+document.body.addEventListener('click',()=>{
+  taps++;
+  if(taps==5){
+    show('adminLogin');
+    taps=0;
+  }
+});
+</script>
+
+</body>
 </html>
