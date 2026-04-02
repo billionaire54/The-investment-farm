@@ -1,241 +1,168 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Farm Investment</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0f172a;
-  color: white;
-}
-
-.container {
-  padding: 20px;
-}
-
-.card {
-  background: #1e293b;
-  padding: 15px;
-  margin: 10px 0;
-  border-radius: 10px;
-}
-
-button {
-  padding: 10px;
-  border: none;
-  background: gold;
-  color: black;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 10px;
-}
-
-.hidden {
-  display: none;
-}
-
-.progress {
-  height: 10px;
-  background: #334155;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-
-.progress-bar {
-  height: 10px;
-  background: gold;
-  border-radius: 10px;
-}
-
-.header {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-</style>
+  <title>The Investment Farm</title>
 </head>
 
 <body>
 
-<div class="container">
+<!-- ================= USER PAGE ================= -->
+<div id="userPage">
 
-<!-- GET STARTED -->
-<div id="start">
-  <div class="header">🌿 The Farm Investment</div>
-  <button onclick="showPlans()">Get Started</button>
-</div>
+<h1>Investment Farm</h1>
 
-<!-- PLANS -->
-<div id="plans" class="hidden">
-  <div class="header">Investment Plans</div>
+<h3>Make Payment</h3>
 
-  <div class="card">
-    🐱 Cat - GHS 50  
-    <br>⏱ 10 days  
-    <br>Up to GHS 150  
-    <button onclick="selectPlan('Cat',50,150)">Invest</button>
-  </div>
+<p><b>Send Money To:</b></p>
+<p>Name: MARY ENNINFUL</p>
+<p>Number: 0246278096</p>
+<p>Network: MTN</p>
 
-  <div class="card">
-    🐰 Rabbit - GHS 30  
-    <br>⏱ 10 days  
-    <br>Up to GHS 100  
-    <button onclick="selectPlan('Rabbit',30,100)">Invest</button>
-  </div>
+<br>
 
-  <div class="card">
-    🐄 Cow - GHS 50  
-    <br>⏱ 10 days  
-    <br>Up to GHS 150  
-    <button onclick="selectPlan('Cow',50,150)">Invest</button>
-  </div>
+<input id="name" placeholder="Your Name"><br><br>
+<input id="amount" placeholder="Amount"><br><br>
 
-  <div class="card">
-    🐔 Hen - GHS 30  
-    <br>⏱ 10 days  
-    <br>Up to GHS 100  
-    <button onclick="selectPlan('Hen',30,100)">Invest</button>
-  </div>
-</div>
+<button onclick="submitPayment()">I Have Paid</button>
 
-<!-- PAYMENT -->
-<div id="payment" class="hidden">
-  <div class="header">Make Payment</div>
-
-  <div class="card">
-    Send money to:<br><br>
-    📱 0246278096<br>
-    👤 Mary Enninful<br>
-    📡 MTN<br><br>
-
-    <button onclick="confirmPayment()">I Have Paid</button>
-  </div>
-
-  <button onclick="showPlans()">⬅ Back</button>
-</div>
-
-<!-- CONFIRMATION -->
-<div id="confirm" class="hidden">
-  <div class="header">Processing</div>
-
-  <div class="card">
-    Your investment will be confirmed within 24 hours ⏳
-  </div>
-
-  <button onclick="goDashboard()">Go to Dashboard</button>
-</div>
-
-<!-- DASHBOARD -->
-<div id="dashboard" class="hidden">
-  <div class="header">Dashboard</div>
-
-  <div id="investmentList"></div>
-
-  <button onclick="showHistory()">View History</button>
-</div>
-
-<!-- HISTORY -->
-<div id="history" class="hidden">
-  <div class="header">Transaction History</div>
-
-  <div id="historyList"></div>
-
-  <button onclick="goDashboard()">⬅ Back</button>
-</div>
+<br><br>
+<button onclick="showAdmin()">Admin Login</button>
 
 </div>
 
-<script>
-let currentPlan = null;
-let investments = [];
 
-function showPlans() {
-  hideAll();
-  document.getElementById("plans").classList.remove("hidden");
+<!-- ================= ADMIN PAGE ================= -->
+<div id="adminPage" style="display:none;">
+
+<h2>Admin Login</h2>
+
+<input type="password" id="pass" placeholder="Enter password">
+<button onclick="login()">Login</button>
+
+<div id="dashboard" style="display:none;">
+  <h3>Payments</h3>
+  <div id="list"></div>
+</div>
+
+<br>
+<button onclick="backToUser()">Back</button>
+
+</div>
+
+
+<script type="module">
+
+// 🔥 FIREBASE IMPORTS
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+// 🔥 CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSyCY4EYV5FiTbsnm0s2VsYo6UzHi3eEaVeo",
+  authDomain: "the-farm-investment.firebaseapp.com",
+  projectId: "the-farm-investment",
+  storageBucket: "the-farm-investment.firebasestorage.app",
+  messagingSenderId: "438325688548",
+  appId: "1:438325688548:web:ea5550aa2b135e7f5b14f1",
+  measurementId: "G-EMS1Z41VS8"
+};
+
+// 🔥 INIT
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ================= USER FUNCTION =================
+async function submitPayment() {
+
+  const name = document.getElementById("name").value;
+  const amount = document.getElementById("amount").value;
+
+  if (!name || !amount) {
+    alert("Fill all fields");
+    return;
+  }
+
+  await addDoc(collection(db, "payments"), {
+    name: name,
+    amount: amount,
+    phone: "0246278096",
+    network: "MTN",
+    status: "Pending",
+    date: new Date().toLocaleString()
+  });
+
+  alert("Payment submitted. Wait for approval.");
+
+  document.getElementById("name").value = "";
+  document.getElementById("amount").value = "";
 }
 
-function selectPlan(name, amount, returns) {
-  currentPlan = {
-    name,
-    amount,
-    returns,
-    duration: 10,
-    day: 1,
-    status: "Pending"
-  };
 
-  hideAll();
-  document.getElementById("payment").classList.remove("hidden");
+// ================= ADMIN NAVIGATION =================
+function showAdmin() {
+  document.getElementById("userPage").style.display = "none";
+  document.getElementById("adminPage").style.display = "block";
 }
 
-function confirmPayment() {
-  currentPlan.status = "Active";
-  investments.push(currentPlan);
-
-  hideAll();
-  document.getElementById("confirm").classList.remove("hidden");
+function backToUser() {
+  document.getElementById("adminPage").style.display = "none";
+  document.getElementById("userPage").style.display = "block";
 }
 
-function goDashboard() {
-  hideAll();
-  document.getElementById("dashboard").classList.remove("hidden");
-  renderDashboard();
+
+// ================= ADMIN LOGIN =================
+function login() {
+  const pass = document.getElementById("pass").value;
+
+  if (pass === "12345") {
+    document.getElementById("dashboard").style.display = "block";
+    loadPayments();
+  } else {
+    alert("Wrong password");
+  }
 }
 
-function showHistory() {
-  hideAll();
-  document.getElementById("history").classList.remove("hidden");
-  renderHistory();
-}
 
-function renderDashboard() {
-  let list = document.getElementById("investmentList");
-  list.innerHTML = "";
+// ================= LOAD PAYMENTS =================
+async function loadPayments() {
+  const querySnapshot = await getDocs(collection(db, "payments"));
 
-  investments.forEach((inv, index) => {
-    let progress = (inv.day / inv.duration) * 100;
+  let html = "";
 
-    list.innerHTML += `
-      <div class="card">
-        ${inv.name} Investment<br>
-        GHS ${inv.amount}<br>
-        ⏱ Day ${inv.day} / ${inv.duration}<br>
-        Status: ${inv.status}
+  querySnapshot.forEach((docSnap) => {
+    const data = docSnap.data();
 
-        <div class="progress">
-          <div class="progress-bar" style="width:${progress}%"></div>
-        </div>
+    html += `
+      <div style="border:1px solid black; margin:10px; padding:10px;">
+        <p><b>Name:</b> ${data.name}</p>
+        <p><b>Amount:</b> ${data.amount}</p>
+        <p><b>Status:</b> ${data.status}</p>
+        <button onclick="approve('${docSnap.id}')">Approve</button>
       </div>
     `;
   });
+
+  document.getElementById("list").innerHTML = html;
 }
 
-function renderHistory() {
-  let list = document.getElementById("historyList");
-  list.innerHTML = "";
 
-  investments.forEach(inv => {
-    list.innerHTML += `
-      <div class="card">
-        ${inv.name}<br>
-        GHS ${inv.amount}<br>
-        Duration: ${inv.duration} days<br>
-        Status: ${inv.status}
-      </div>
-    `;
-  });
+// ================= APPROVE =================
+async function approve(id) {
+  const ref = doc(db, "payments", id);
+  await updateDoc(ref, { status: "Approved" });
+
+  alert("Payment Approved");
+  loadPayments();
 }
 
-function hideAll() {
-  document.querySelectorAll(".container > div").forEach(div => {
-    div.classList.add("hidden");
-  });
-}
+
+// 🔥 MAKE GLOBAL
+window.submitPayment = submitPayment;
+window.showAdmin = showAdmin;
+window.backToUser = backToUser;
+window.login = login;
+window.approve = approve;
+
 </script>
 
 </body>
