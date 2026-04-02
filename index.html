@@ -1,166 +1,88 @@
 <!DOCTYPE html><html>
 <head>
-  <title>The Farm Investment</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Investment Farm</title>
   <style>
-    body { margin:0; font-family: Arial; background:#0b0f1a; color:white; }
-    .screen { display:none; padding:20px; }
-    .active { display:block; }
-    h1,h2 { text-align:center; }.btn {
-  background:#00c853; border:none; padding:14px; width:100%;
-  border-radius:10px; color:white; font-size:16px; margin-top:15px;
-}
-
-.back {
-  background:#555;
-}
-
-.card {
-  background:#161b2e; padding:15px; margin:10px 0; border-radius:12px;
-}
-
-input {
-  width:100%; padding:12px; margin-top:10px;
-  border-radius:10px; border:none;
-}
-
-.balance {
-  background:#00c853; padding:20px; border-radius:15px;
-  text-align:center; font-size:22px; margin-bottom:20px;
-}
-
+    body {font-family: Arial; background:#0f172a; color:white; text-align:center;}
+    .card {background:#1e293b; padding:20px; margin:20px; border-radius:10px;}
+    button {padding:10px 20px; margin:10px; border:none; border-radius:5px; cursor:pointer;}
+    .hidden {display:none;}
   </style>
 </head>
-<body><!-- START --><div id="start" class="screen active">
-  <h1>🌾 Farm Investment</h1>
-  <p style="text-align:center;">Earn profits in 10 days</p>
-  <button class="btn" onclick="show('login')">Get Started</button>
-</div><!-- LOGIN --><div id="login" class="screen">
-  <h2>Create Account</h2>
-  <input id="username" placeholder="Enter your name">
-  <button class="btn" onclick="login()">Continue</button>
-  <button class="btn back" onclick="show('start')">⬅ Back</button>
-</div><!-- DASHBOARD --><div id="dashboard" class="screen">
-  <div class="balance">Balance: GHS <span id="bal">0</span></div>
-  <button class="btn" onclick="show('plans')">Invest Now</button>
-  <button class="btn" onclick="show('history')">Transaction History</button>
-</div><!-- PLANS --><div id="plans" class="screen">
-  <h2>Select Plan</h2>  <div class="card">
-    30 → 100 GHS (10 days)
-    <button class="btn" onclick="choose(30,100)">Select</button>
-  </div>  <div class="card">
-    50 → 150 GHS (10 days)
-    <button class="btn" onclick="choose(50,150)">Select</button>
-  </div>  <div class="card">
-    100 → 250 GHS (10 days)
-    <button class="btn" onclick="choose(100,250)">Select</button>
-  </div><button class="btn back" onclick="show('dashboard')">⬅ Back</button>
-
-</div><!-- PAYMENT --><div id="payment" class="screen">
-  <h2>Make Payment</h2>
+<body><h1>🌱 Investment Farm</h1>
+<button onclick="showPlans()">Get Started</button><div id="plans" class="hidden">
   <div class="card">
-    Number: <b>0246278096</b><br>
-    Name: <b>MARY ENNINFUL</b><br>
-    Network: <b>MTN</b>
-  </div>  <input id="amount" readonly><button class="btn" onclick="pay()">I Have Paid</button> <button class="btn back" onclick="show('plans')">⬅ Back</button>
-
-</div><!-- PENDING --><div id="pending" class="screen">
-  <h2>⏳ Payment Pending</h2>
-  <p>Waiting for admin approval</p>
-  <button class="btn back" onclick="show('dashboard')">⬅ Back</button>
-</div><!-- HISTORY --><div id="history" class="screen">
-  <h2>Transaction History</h2>
-  <div id="historyList"></div>
-  <button class="btn back" onclick="show('dashboard')">⬅ Back</button>
-</div><!-- ADMIN LOGIN (hidden access: press 5 times title) --><div id="adminLogin" class="screen">
-  <h2>Admin Login</h2>
-  <input id="adminPass" placeholder="Enter password">
-  <button class="btn" onclick="adminLogin()">Login</button>
-</div><!-- ADMIN PANEL --><div id="admin" class="screen">
+    <h3>Plan 1</h3>
+    <p>30 → 100</p>
+    <button onclick="selectPlan(30,100)">Select</button>
+  </div>
+  <div class="card">
+    <h3>Plan 2</h3>
+    <p>50 → 150</p>
+    <button onclick="selectPlan(50,150)">Select</button>
+  </div>
+  <div class="card">
+    <h3>Plan 3</h3>
+    <p>100 → 250</p>
+    <button onclick="selectPlan(100,250)">Select</button>
+  </div>
+</div><div id="payment" class="hidden">
+  <h2>Make Payment</h2>
+  <p>Send money to:</p>
+  <p><b>0246278096</b></p>
+  <p>Name: MARY ENNINFUL</p>
+  <p>Network: MTN</p>
+  <button onclick="confirmPayment()">I Have Paid</button>
+</div><div id="status" class="hidden">
+  <h2 id="statusText"></h2>
+</div><div id="dashboard" class="hidden">
+  <h2>User Dashboard</h2>
+  <p id="balance"></p>
+  <button onclick="withdraw()">Withdraw</button>
+</div><div id="admin" class="hidden">
   <h2>Admin Panel</h2>
-  <div id="adminList"></div>
-  <button class="btn back" onclick="show('dashboard')">⬅ Back</button>
+  <input id="adminPass" placeholder="Enter password" />
+  <button onclick="loginAdmin()">Login</button>
+  <div id="adminPanel" class="hidden">
+    <h3>Approve Payment</h3>
+    <button onclick="approve()">Approve User</button>
+  </div>
 </div><script>
-let amount=0, profit=0;
-let balance=0;
-let history=[];
-let tapCount=0;
+let selectedAmount = 0;
+let returnAmount = 0;
 
-function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function showPlans(){
+  document.getElementById('plans').classList.remove('hidden');
 }
 
-// secret admin trigger
-window.onload = function(){
-  document.querySelector('h1').onclick = ()=>{
-    tapCount++;
-    if(tapCount==5){
-      show('adminLogin');
-      tapCount=0;
-    }
-  }
+function selectPlan(amount, ret){
+  selectedAmount = amount;
+  returnAmount = ret;
+  document.getElementById('payment').classList.remove('hidden');
 }
 
-function login(){
-  let user=document.getElementById('username').value;
-  if(!user) return alert('Enter your name');
-  show('dashboard');
+function confirmPayment(){
+  document.getElementById('status').classList.remove('hidden');
+  document.getElementById('statusText').innerText = 'Payment Pending (24hrs)';
 }
 
-function choose(a,p){
-  amount=a;
-  profit=p;
-  document.getElementById('amount').value="GHS "+a;
-  show('payment');
+function approve(){
+  document.getElementById('statusText').innerText = 'Payment Approved';
+  document.getElementById('dashboard').classList.remove('hidden');
+  document.getElementById('balance').innerText = 'Expected Return: ' + returnAmount;
 }
 
-function pay(){
-  show('pending');
-
-  history.push({amount:amount, profit:profit, status:"Pending"});
-  updateHistory();
-  updateAdmin();
+function withdraw(){
+  let amount = prompt('Enter amount');
+  alert('Withdrawal Pending');
 }
 
-function updateHistory(){
-  let list=document.getElementById('historyList');
-  list.innerHTML="";
-
-  history.forEach(h=>{
-    list.innerHTML += `<div class='card'>Invested GHS ${h.amount}<br>Return: GHS ${h.profit}<br>Status: ${h.status}</div>`;
-  });
-}
-
-function adminLogin(){
-  let pass=document.getElementById('adminPass').value;
-  if(pass=="1234"){
-    show('admin');
-    updateAdmin();
+function loginAdmin(){
+  let pass = document.getElementById('adminPass').value;
+  if(pass === 'admin123'){
+    document.getElementById('adminPanel').classList.remove('hidden');
   } else {
     alert('Wrong password');
   }
-}
-
-function updateAdmin(){
-  let list=document.getElementById('adminList');
-  list.innerHTML="";
-
-  history.forEach((h,i)=>{
-    list.innerHTML += `<div class='card'>
-      GHS ${h.amount} → ${h.profit}<br>
-      Status: ${h.status}<br>
-      ${h.status==='Pending' ? `<button onclick='approve(${i})'>Approve</button>` : ''}
-    </div>`;
-  });
-}
-
-function approve(i){
-  history[i].status="Completed";
-  balance+=history[i].profit;
-  document.getElementById('bal').innerText=balance;
-  updateAdmin();
-  updateHistory();
 }
 </script></body>
 </html>
