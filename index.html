@@ -5,17 +5,23 @@
   <style>
     body {margin:0;font-family:Arial;background:#0f172a;color:white;}
     .container {padding:20px;max-width:500px;margin:auto;}
-    .card {background:#1e293b;padding:20px;margin:15px 0;border-radius:15px;}
-    button {width:100%;padding:12px;border:none;border-radius:10px;background:#22c55e;color:white;font-weight:bold;margin-top:10px;}
+    .card {background:#1e293b;padding:20px;margin:15px 0;border-radius:15px;animation:fadeIn 0.4s ease;}
+    button {width:100%;padding:12px;border:none;border-radius:10px;background:#22c55e;color:white;font-weight:bold;margin-top:10px;transition:0.3s;}
+    button:hover{transform:scale(1.05);}
     .secondary {background:#3b82f6;}
     .hidden {display:none;}
-    .plan {border:1px solid #334155;border-radius:12px;padding:15px;margin:10px 0;}
+    .plan {border:1px solid #334155;border-radius:12px;padding:15px;margin:10px 0;transition:0.3s;}
+    .plan:hover{transform:translateY(-5px);}@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);} 
+  to{opacity:1; transform:translateY(0);} 
+}
+
   </style>
 </head>
-<body><div class="container"><!-- HOME --><div id="home">
+<body><div class="container"><div id="home">
   <h1>🌱 The Farm Investment</h1>
   <button onclick="showPlans()">Get Started</button>
-</div><!-- PLANS --><div id="plans" class="hidden">
+</div><div id="plans" class="hidden">
   <h2>Select Plan</h2>  <div class="plan">
     <p>Hen: 30 → 100 (10 days)</p>
     <button onclick="selectPlan(30,100)">Select</button>
@@ -27,29 +33,29 @@
     <button onclick="selectPlan(100,250)">Select</button>
   </div><button class="secondary" onclick="goHome()">⬅ Back</button>
 
-</div><!-- PAYMENT --><div id="payment" class="hidden card">
+</div><div id="payment" class="hidden card">
   <button class="secondary" onclick="goPlans()">⬅ Back</button>
   <h3>Send Payment</h3>
   <p><b>0246278096</b></p>
   <p>MARY ENNINFUL</p>
   <p>MTN</p>
   <button onclick="confirmPayment()">I Have Paid</button>
-</div><!-- STATUS --><div id="status" class="hidden card">
+</div><div id="status" class="hidden card">
   <button class="secondary" onclick="goPlans()">⬅ Back</button>
   <h3 id="statusText"></h3>
-</div><!-- DASHBOARD --><div id="dashboard" class="hidden">
+</div><div id="dashboard" class="hidden">
   <h2>Dashboard</h2>
   <div class="card">
     <p id="balance"></p>
     <button onclick="showWithdraw()">Withdraw</button>
   </div>
   <button class="secondary" onclick="goPlans()">⬅ Back</button>
-</div><!-- WITHDRAW --><div id="withdraw" class="hidden card">
+</div><div id="withdraw" class="hidden card">
   <button class="secondary" onclick="goDashboard()">⬅ Back</button>
   <h3>Withdraw</h3>
   <input id="amount" placeholder="Enter amount" />
   <button onclick="withdraw()">Submit</button>
-</div><!-- ADMIN --><div id="admin" class="card">
+</div><div id="admin" class="card">
   <h3>Admin</h3>
   <input id="adminPass" placeholder="Password" />
   <button onclick="loginAdmin()">Login</button>  <div id="adminPanel" class="hidden">
