@@ -1,168 +1,132 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>The Investment Farm</title>
+  <title>The Farm Investment</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      margin: 0;
+    }
+
+    h1 {
+      background: #16a34a;
+      padding: 15px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      margin: 15px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #22c55e;
+      color: white;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    input {
+      padding: 10px;
+      margin: 10px;
+      width: 80%;
+      border-radius: 8px;
+      border: none;
+    }
+
+    .payment {
+      background: #020617;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- ================= USER PAGE ================= -->
-<div id="userPage">
+<h1>🌾 The Farm Investment</h1>
 
-<h1>Investment Farm</h1>
+<div class="container">
 
-<h3>Make Payment</h3>
+  <h2>Choose Investment Plan</h2>
 
-<p><b>Send Money To:</b></p>
-<p>Name: MARY ENNINFUL</p>
-<p>Number: 0246278096</p>
-<p>Network: MTN</p>
+  <div class="card">
+    <h3>🐱 Cat Plan</h3>
+    <p>Invest: 50 GHS</p>
+    <p>Duration: 10 Days</p>
+    <p>Return: 150 GHS</p>
+    <button onclick="selectPlan('Cat',50)">Invest</button>
+  </div>
 
-<br>
+  <div class="card">
+    <h3>🐰 Rabbit Plan</h3>
+    <p>Invest: 30 GHS</p>
+    <p>Duration: 10 Days</p>
+    <p>Return: 100 GHS</p>
+    <button onclick="selectPlan('Rabbit',30)">Invest</button>
+  </div>
 
-<input id="name" placeholder="Your Name"><br><br>
-<input id="amount" placeholder="Amount"><br><br>
+  <div class="card">
+    <h3>🐄 Cow Plan</h3>
+    <p>Invest: 50 GHS</p>
+    <p>Duration: 10 Days</p>
+    <p>Return: 150 GHS</p>
+    <button onclick="selectPlan('Cow',50)">Invest</button>
+  </div>
 
-<button onclick="submitPayment()">I Have Paid</button>
+  <div class="card">
+    <h3>🐔 Hen Plan</h3>
+    <p>Invest: 30 GHS</p>
+    <p>Duration: 10 Days</p>
+    <p>Return: 100 GHS</p>
+    <button onclick="selectPlan('Hen',30)">Invest</button>
+  </div>
 
-<br><br>
-<button onclick="showAdmin()">Admin Login</button>
+  <div class="payment">
+    <h2>Make Payment</h2>
+
+    <p><b>Name:</b> MARY ENNINFUL</p>
+    <p><b>Number:</b> 0246278096</p>
+    <p><b>Network:</b> MTN</p>
+
+    <input type="text" id="name" placeholder="Your Name"><br>
+    <input type="number" id="amount" placeholder="Amount"><br>
+
+    <button onclick="pay()">I Have Paid</button>
+  </div>
 
 </div>
 
+<script>
+function selectPlan(plan, amount){
+  document.getElementById("amount").value = amount;
+  alert("You selected " + plan + " plan");
+}
 
-<!-- ================= ADMIN PAGE ================= -->
-<div id="adminPage" style="display:none;">
+function pay(){
+  let name = document.getElementById("name").value;
+  let amount = document.getElementById("amount").value;
 
-<h2>Admin Login</h2>
-
-<input type="password" id="pass" placeholder="Enter password">
-<button onclick="login()">Login</button>
-
-<div id="dashboard" style="display:none;">
-  <h3>Payments</h3>
-  <div id="list"></div>
-</div>
-
-<br>
-<button onclick="backToUser()">Back</button>
-
-</div>
-
-
-<script type="module">
-
-// 🔥 FIREBASE IMPORTS
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-
-// 🔥 CONFIG
-const firebaseConfig = {
-  apiKey: "AIzaSyCY4EYV5FiTbsnm0s2VsYo6UzHi3eEaVeo",
-  authDomain: "the-farm-investment.firebaseapp.com",
-  projectId: "the-farm-investment",
-  storageBucket: "the-farm-investment.firebasestorage.app",
-  messagingSenderId: "438325688548",
-  appId: "1:438325688548:web:ea5550aa2b135e7f5b14f1",
-  measurementId: "G-EMS1Z41VS8"
-};
-
-// 🔥 INIT
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// ================= USER FUNCTION =================
-async function submitPayment() {
-
-  const name = document.getElementById("name").value;
-  const amount = document.getElementById("amount").value;
-
-  if (!name || !amount) {
-    alert("Fill all fields");
+  if(name === "" || amount === ""){
+    alert("Fill all details");
     return;
   }
 
-  await addDoc(collection(db, "payments"), {
-    name: name,
-    amount: amount,
-    phone: "0246278096",
-    network: "MTN",
-    status: "Pending",
-    date: new Date().toLocaleString()
-  });
-
-  alert("Payment submitted. Wait for approval.");
-
-  document.getElementById("name").value = "";
-  document.getElementById("amount").value = "";
+  alert("Payment submitted! Waiting for admin confirmation.");
 }
-
-
-// ================= ADMIN NAVIGATION =================
-function showAdmin() {
-  document.getElementById("userPage").style.display = "none";
-  document.getElementById("adminPage").style.display = "block";
-}
-
-function backToUser() {
-  document.getElementById("adminPage").style.display = "none";
-  document.getElementById("userPage").style.display = "block";
-}
-
-
-// ================= ADMIN LOGIN =================
-function login() {
-  const pass = document.getElementById("pass").value;
-
-  if (pass === "12345") {
-    document.getElementById("dashboard").style.display = "block";
-    loadPayments();
-  } else {
-    alert("Wrong password");
-  }
-}
-
-
-// ================= LOAD PAYMENTS =================
-async function loadPayments() {
-  const querySnapshot = await getDocs(collection(db, "payments"));
-
-  let html = "";
-
-  querySnapshot.forEach((docSnap) => {
-    const data = docSnap.data();
-
-    html += `
-      <div style="border:1px solid black; margin:10px; padding:10px;">
-        <p><b>Name:</b> ${data.name}</p>
-        <p><b>Amount:</b> ${data.amount}</p>
-        <p><b>Status:</b> ${data.status}</p>
-        <button onclick="approve('${docSnap.id}')">Approve</button>
-      </div>
-    `;
-  });
-
-  document.getElementById("list").innerHTML = html;
-}
-
-
-// ================= APPROVE =================
-async function approve(id) {
-  const ref = doc(db, "payments", id);
-  await updateDoc(ref, { status: "Approved" });
-
-  alert("Payment Approved");
-  loadPayments();
-}
-
-
-// 🔥 MAKE GLOBAL
-window.submitPayment = submitPayment;
-window.showAdmin = showAdmin;
-window.backToUser = backToUser;
-window.login = login;
-window.approve = approve;
-
 </script>
 
 </body>
