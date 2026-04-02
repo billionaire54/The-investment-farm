@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Farm Investment</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+}
+
+.container {
+  padding: 20px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  background: gold;
+  color: black;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.progress {
+  height: 10px;
+  background: #334155;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  height: 10px;
+  background: gold;
+  border-radius: 10px;
+}
+
+.header {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- GET STARTED -->
+<div id="start">
+  <div class="header">🌿 The Farm Investment</div>
+  <button onclick="showPlans()">Get Started</button>
+</div>
+
+<!-- PLANS -->
+<div id="plans" class="hidden">
+  <div class="header">Investment Plans</div>
+
+  <div class="card">
+    🐱 Cat - GHS 50  
+    <br>⏱ 10 days  
+    <br>Up to GHS 150  
+    <button onclick="selectPlan('Cat',50,150)">Invest</button>
+  </div>
+
+  <div class="card">
+    🐰 Rabbit - GHS 30  
+    <br>⏱ 10 days  
+    <br>Up to GHS 100  
+    <button onclick="selectPlan('Rabbit',30,100)">Invest</button>
+  </div>
+
+  <div class="card">
+    🐄 Cow - GHS 50  
+    <br>⏱ 10 days  
+    <br>Up to GHS 150  
+    <button onclick="selectPlan('Cow',50,150)">Invest</button>
+  </div>
+
+  <div class="card">
+    🐔 Hen - GHS 30  
+    <br>⏱ 10 days  
+    <br>Up to GHS 100  
+    <button onclick="selectPlan('Hen',30,100)">Invest</button>
+  </div>
+</div>
+
+<!-- PAYMENT -->
+<div id="payment" class="hidden">
+  <div class="header">Make Payment</div>
+
+  <div class="card">
+    Send money to:<br><br>
+    📱 0246278096<br>
+    👤 Mary Enninful<br>
+    📡 MTN<br><br>
+
+    <button onclick="confirmPayment()">I Have Paid</button>
+  </div>
+
+  <button onclick="showPlans()">⬅ Back</button>
+</div>
+
+<!-- CONFIRMATION -->
+<div id="confirm" class="hidden">
+  <div class="header">Processing</div>
+
+  <div class="card">
+    Your investment will be confirmed within 24 hours ⏳
+  </div>
+
+  <button onclick="goDashboard()">Go to Dashboard</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+  <div class="header">Dashboard</div>
+
+  <div id="investmentList"></div>
+
+  <button onclick="showHistory()">View History</button>
+</div>
+
+<!-- HISTORY -->
+<div id="history" class="hidden">
+  <div class="header">Transaction History</div>
+
+  <div id="historyList"></div>
+
+  <button onclick="goDashboard()">⬅ Back</button>
+</div>
+
+</div>
+
+<script>
+let currentPlan = null;
+let investments = [];
+
+function showPlans() {
+  hideAll();
+  document.getElementById("plans").classList.remove("hidden");
+}
+
+function selectPlan(name, amount, returns) {
+  currentPlan = {
+    name,
+    amount,
+    returns,
+    duration: 10,
+    day: 1,
+    status: "Pending"
+  };
+
+  hideAll();
+  document.getElementById("payment").classList.remove("hidden");
+}
+
+function confirmPayment() {
+  currentPlan.status = "Active";
+  investments.push(currentPlan);
+
+  hideAll();
+  document.getElementById("confirm").classList.remove("hidden");
+}
+
+function goDashboard() {
+  hideAll();
+  document.getElementById("dashboard").classList.remove("hidden");
+  renderDashboard();
+}
+
+function showHistory() {
+  hideAll();
+  document.getElementById("history").classList.remove("hidden");
+  renderHistory();
+}
+
+function renderDashboard() {
+  let list = document.getElementById("investmentList");
+  list.innerHTML = "";
+
+  investments.forEach((inv, index) => {
+    let progress = (inv.day / inv.duration) * 100;
+
+    list.innerHTML += `
+      <div class="card">
+        ${inv.name} Investment<br>
+        GHS ${inv.amount}<br>
+        ⏱ Day ${inv.day} / ${inv.duration}<br>
+        Status: ${inv.status}
+
+        <div class="progress">
+          <div class="progress-bar" style="width:${progress}%"></div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function renderHistory() {
+  let list = document.getElementById("historyList");
+  list.innerHTML = "";
+
+  investments.forEach(inv => {
+    list.innerHTML += `
+      <div class="card">
+        ${inv.name}<br>
+        GHS ${inv.amount}<br>
+        Duration: ${inv.duration} days<br>
+        Status: ${inv.status}
+      </div>
+    `;
+  });
+}
+
+function hideAll() {
+  document.querySelectorAll(".container > div").forEach(div => {
+    div.classList.add("hidden");
+  });
+}
+</script>
+
+</body>
+</html>
