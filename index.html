@@ -1,197 +1,82 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Farm Investment</title>
-
-<style>
-body{
-  margin:0;
-  font-family: Arial;
-  background:#0f172a;
-  color:white;
-}
-.container{padding:20px; max-width:500px; margin:auto;}
-.card{
-  background:#1e293b;
-  padding:20px;
-  border-radius:15px;
-  margin:15px 0;
-}
-button{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border:none;
-  border-radius:10px;
-  background:#22c55e;
-  color:white;
-  font-weight:bold;
-}
-.secondary{background:#3b82f6;}
-.hidden{display:none;}
-.plan{
-  border:1px solid #334155;
-  padding:15px;
-  border-radius:10px;
-  margin:10px 0;
-}
-input{
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:none;
-  margin-top:10px;
-}
-.header{text-align:center; padding:40px 10px;}
-.logo{font-size:26px; color:#22c55e;}
-.small{font-size:12px; color:#94a3b8;}
-</style>
+  <title>The Farm Investment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {margin:0;font-family:Arial;background:#0f172a;color:white;}
+    .container {padding:20px;max-width:500px;margin:auto;}
+    .card {background:#1e293b;padding:20px;margin:15px 0;border-radius:15px;}
+    button {width:100%;padding:12px;border:none;border-radius:10px;background:#22c55e;color:white;font-weight:bold;margin-top:10px;}
+    .secondary {background:#3b82f6;}
+    .hidden {display:none;}
+    .plan {border:1px solid #334155;border-radius:12px;padding:15px;margin:10px 0;}
+  </style>
 </head>
+<body><div class="container"><!-- HOME --><div id="home">
+  <h1>🌱 The Farm Investment</h1>
+  <button onclick="showPlans()">Get Started</button>
+</div><!-- PLANS --><div id="plans" class="hidden">
+  <h2>Select Plan</h2>  <div class="plan">
+    <p>Hen: 30 → 100 (10 days)</p>
+    <button onclick="selectPlan(30,100)">Select</button>
+  </div>  <div class="plan">
+    <p>Cow: 50 → 150 (10 days)</p>
+    <button onclick="selectPlan(50,150)">Select</button>
+  </div>  <div class="plan">
+    <p>Rabbit: 100 → 250 (10 days)</p>
+    <button onclick="selectPlan(100,250)">Select</button>
+  </div><button class="secondary" onclick="goHome()">⬅ Back</button>
 
-<body>
-<div class="container">
-
-<!-- HOME -->
-<div id="home">
-  <div class="header">
-    <div class="logo">🌱 Farm Investment</div>
-    <p>Grow your money daily</p>
-    <button onclick="show('plans')">Get Started</button>
-  </div>
-</div>
-
-<!-- PLANS -->
-<div id="plans" class="hidden">
-  <h2>Select Plan</h2>
-
-  <div class="plan">
-    <h3>🐔 Hen</h3>
-    <p>30 → 100</p>
-    <p class="small">10 days</p>
-    <button onclick="choose(30,100)">Invest</button>
-  </div>
-
-  <div class="plan">
-    <h3>🐄 Cow</h3>
-    <p>50 → 150</p>
-    <p class="small">10 days</p>
-    <button onclick="choose(50,150)">Invest</button>
-  </div>
-
-  <div class="plan">
-    <h3>🐇 Rabbit</h3>
-    <p>100 → 250</p>
-    <p class="small">10 days</p>
-    <button onclick="choose(100,250)">Invest</button>
-  </div>
-
-  <button class="secondary" onclick="show('home')">⬅ Back</button>
-</div>
-
-<!-- PAYMENT -->
-<div id="payment" class="hidden card">
-  <button class="secondary" onclick="show('plans')">⬅ Back</button>
+</div><!-- PAYMENT --><div id="payment" class="hidden card">
+  <button class="secondary" onclick="goPlans()">⬅ Back</button>
   <h3>Send Payment</h3>
   <p><b>0246278096</b></p>
   <p>MARY ENNINFUL</p>
   <p>MTN</p>
-  <button onclick="paid()">I Have Paid</button>
-</div>
-
-<!-- STATUS -->
-<div id="status" class="hidden card">
-  <h3 id="statusText">Pending...</h3>
-</div>
-
-<!-- DASHBOARD -->
-<div id="dashboard" class="hidden">
+  <button onclick="confirmPayment()">I Have Paid</button>
+</div><!-- STATUS --><div id="status" class="hidden card">
+  <button class="secondary" onclick="goPlans()">⬅ Back</button>
+  <h3 id="statusText"></h3>
+</div><!-- DASHBOARD --><div id="dashboard" class="hidden">
   <h2>Dashboard</h2>
-
   <div class="card">
-    <p id="balance">Balance: 0</p>
-    <button onclick="show('withdraw')">Withdraw</button>
+    <p id="balance"></p>
+    <button onclick="showWithdraw()">Withdraw</button>
   </div>
-
-  <button class="secondary" onclick="show('plans')">⬅ Back</button>
-</div>
-
-<!-- WITHDRAW -->
-<div id="withdraw" class="hidden card">
-  <button class="secondary" onclick="show('dashboard')">⬅ Back</button>
+  <button class="secondary" onclick="goPlans()">⬅ Back</button>
+</div><!-- WITHDRAW --><div id="withdraw" class="hidden card">
+  <button class="secondary" onclick="goDashboard()">⬅ Back</button>
   <h3>Withdraw</h3>
-  <input id="amount" placeholder="Enter amount">
+  <input id="amount" placeholder="Enter amount" />
   <button onclick="withdraw()">Submit</button>
-</div>
+</div><!-- ADMIN --><div id="admin" class="card">
+  <h3>Admin</h3>
+  <input id="adminPass" placeholder="Password" />
+  <button onclick="loginAdmin()">Login</button>  <div id="adminPanel" class="hidden">
+    <button onclick="approve()">Approve Payment</button>
+  </div>
+</div></div><script>
+let selectedAmount=0, returnAmount=0;
 
-<!-- ADMIN (hidden entry) -->
-<div id="adminLogin" class="hidden card">
-  <h3>Admin Login</h3>
-  <input id="pass" placeholder="Password">
-  <button onclick="adminLogin()">Login</button>
-</div>
-
-<div id="adminPanel" class="hidden card">
-  <h3>Admin Panel</h3>
-  <button onclick="approve()">Approve Payment</button>
-</div>
-
-</div>
-
-<script>
-let invest=0, profit=0;
-
-// screen switch
-function show(id){
-  document.querySelectorAll('.container > div').forEach(x=>x.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
+function hideAll(){
+  document.querySelectorAll('.container > div').forEach(el=>el.classList.add('hidden'));
 }
 
-// select plan
-function choose(a,b){
-  invest=a; profit=b;
-  show('payment');
-}
+function showPlans(){ hideAll(); document.getElementById('plans').classList.remove('hidden'); }
+function goHome(){ hideAll(); document.getElementById('home').classList.remove('hidden'); }
+function goPlans(){ hideAll(); document.getElementById('plans').classList.remove('hidden'); }
+function goDashboard(){ hideAll(); document.getElementById('dashboard').classList.remove('hidden'); }
 
-// confirm payment
-function paid(){
-  show('status');
-  document.getElementById('statusText').innerText='⏳ Pending 24hrs';
-}
+function selectPlan(a,b){ selectedAmount=a; returnAmount=b; hideAll(); document.getElementById('payment').classList.remove('hidden'); }
 
-// admin approve
-function approve(){
-  show('dashboard');
-  document.getElementById('balance').innerText='Balance: '+profit;
-}
+function confirmPayment(){ hideAll(); document.getElementById('status').classList.remove('hidden'); document.getElementById('statusText').innerText='⏳ Payment Pending (24hrs)'; }
 
-// withdraw
-function withdraw(){
-  let amt=document.getElementById('amount').value;
-  if(amt){
-    alert('Withdrawal Pending ⏳');
-    show('dashboard');
-  }
-}
+function approve(){ hideAll(); document.getElementById('dashboard').classList.remove('hidden'); document.getElementById('balance').innerText='Expected Return: GH₵ '+returnAmount; }
 
-// admin login
-function adminLogin(){
-  let p=document.getElementById('pass').value;
-  if(p==='admin123'){
-    show('adminPanel');
-  }else alert('Wrong password');
-}
+function showWithdraw(){ hideAll(); document.getElementById('withdraw').classList.remove('hidden'); }
 
-// hidden admin trigger (tap logo 5 times)
-let taps=0;
-document.body.addEventListener('click',()=>{
-  taps++;
-  if(taps==5){
-    show('adminLogin');
-    taps=0;
-  }
-});
-</script>
+function withdraw(){ let amt=document.getElementById('amount').value; if(amt){ alert('Withdrawal Pending ⏳'); goDashboard(); }}
 
-</body>
+function loginAdmin(){ let pass=document.getElementById('adminPass').value; if(pass==='admin123'){ document.getElementById('adminPanel').classList.remove('hidden'); } else alert('Wrong password'); }
+</script></body>
 </html>
